@@ -1,51 +1,71 @@
 import { getFileUrl } from '@utils/fileUtils';
-import {formatDate} from "@utils/dateFormatter.ts";
+import { formatDate } from '@utils/dateFormatter';
 
-export function renderMessages(messages: any[]) {
-    const container = document.getElementById('messages-container');
+export function renderMessages(messages: any[], filterImages: boolean | null = null) {
+    const container = document.querySelector('#messages-container');
+    const channelTitle = document.querySelector('#channel-title');
+
     if (!container) return;
 
     container.innerHTML = '';
 
-    const posts = messages.filter(item => item.channel_post)
+    const posts = messages.filter((item) => {
+        const hasText = item?.channel_post?.text || item?.channel_post?.caption;
+        const hasImage = item?.channel_post?.photo?.length > 0;
 
-    const titleText = document.createElement('h1');
-    titleText.textContent = `Channel: ${posts[0].channel_post.chat.title}`
-    container.insertAdjacentElement('afterbegin', titleText)
+        if (filterImages) {
+            return hasText && hasImage;
+        } else if (filterImages === false) {
+            return hasText && !hasImage;
+        } else {
+            return hasText;
+        }
+    });
+
+    if (!posts.length) return;
+
+    const fragment = document.createDocumentFragment();
+
+    channelTitle!.textContent = `Channel: ${posts[0].channel_post.chat.title}`;
 
     posts.forEach((update) => {
         const message = update.channel_post;
 
         if (!message) return;
 
-        console.log(message)
-
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message');
 
-        if (message.text || message.caption) {
-            const messageText = document.createElement('p');
-            messageText.textContent = `Message: ${message.text || message.caption}`;
-            messageDiv.appendChild(messageText);
-        }
-
         if (message.date) {
             const dateText = document.createElement('p');
+            dateText.classList.add('date');
             dateText.textContent = formatDate(message.date);
             messageDiv.appendChild(dateText);
         }
 
-        if (message?.photo?.length > 0) {
+        if (message.text || message.caption) {
+            const messageText = document.createElement('p');
+            messageText.classList.add('message-text');
+            messageText.textContent = message.text || message.caption;
+            messageDiv.appendChild(messageText);
+        }
+
+        if (message.photo?.length > 0) {
             const largestPic = message.photo[message.photo.length - 1];
 
+            const imgElement = document.createElement('img');
+            imgElement.classList.add('message-image', 'loading');
+            imgElement.src = '/loader.svg';
+            messageDiv.appendChild(imgElement);
+
             getFileUrl(largestPic.file_id).then((imageUrl) => {
-                const imgElement = document.createElement('img');
                 imgElement.src = imageUrl;
-                imgElement.style.width = '300px';
-                messageDiv.appendChild(imgElement);
+                imgElement.classList.remove('loading');
             });
         }
 
-        container.appendChild(messageDiv);
+        fragment.appendChild(messageDiv);
     });
+
+    container.appendChild(fragment);
 }
