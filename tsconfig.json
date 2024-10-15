@@ -6,7 +6,8 @@
       "@components/*": ["src/components/*"],
       "@utils/*": ["src/utils/*"],
       "@styles/*": ["src/styles/*"],
-      "@ui/*": ["src/ui/*"]
+      "@ui/*": ["src/ui/*"],
+      "@app-types/*": ["src/app-types/*"]
     },
     "target": "es2020",
     "useDefineForClassFields": true,

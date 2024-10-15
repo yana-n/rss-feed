@@ -33,6 +33,7 @@ npm install
 ```
 
 ### Set up environment variables:
+
 Create a .env file in the root of the project and add your Telegram bot token and channel ID.
 
 ```bash
@@ -46,4 +47,5 @@ VITE_TG_BASE_URL=https://api.telegram.org
 ```bash
 npm run dev
 ```
+
 This will start the Vite development server, and you can view the application in your browser at http://localhost:3000.

@@ -8,6 +8,7 @@ export default defineConfig({
       '@utils': '/src/utils',
       '@styles': '/src/styles',
       '@ui': '/src/ui',
+      '@app-types': '/src/app-app-types',
     },
   },
 })
