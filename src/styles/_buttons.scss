@@ -1,0 +1,35 @@
+.btn {
+  width: 100%;
+  outline: none;
+  border: 1px solid var(--dark-color);
+  padding: 10px 16px;
+  cursor: pointer;
+  position: fixed;
+  bottom: 0;
+  background: var(--accent-color);
+  color: var(--light-color);
+  transition: all 0.2s ease-in-out;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+
+  &:hover {
+    background-color: var(--accent-color);
+  }
+}
+
+.filter-btn {
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: opacity 0.2s ease-in-out;
+  color: var(--gray-color);
+  font-size: var(--size-s);
+
+  &.active {
+    color: var(--accent-color);
+  }
+
+  &:hover {
+    opacity: 0.7;
+  }
+}

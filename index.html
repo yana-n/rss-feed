@@ -1,29 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Raleway&family=Rozha+One&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway&family=Rozha+One&display=swap"
+      rel="stylesheet"
+    />
 
-  <title>Telegram RSS Feed</title>
-</head>
-<body>
-  <div class="container">
-    <div class="header-container">
-      <h1 id="channel-title">Сообщения из канала</h1>
-      <div class="filters">
-        <span class="filters-title">Show:</span>
-        <button id="show-all" class="filter-btn">All</button>
-        <button id="hide-images" class="filter-btn">Text</button>
-        <button id="show-images" class="filter-btn">Images</button>
+    <title>Telegram RSS Feed</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-container">
+        <h1 id="channel-title">Сообщения из канала</h1>
+        <div class="filters">
+          <span class="filters-title">Show:</span>
+          <button id="show-all" class="filter-btn active">All</button>
+          <button id="hide-images" class="filter-btn">Text</button>
+          <button id="show-images" class="filter-btn">Images</button>
+        </div>
       </div>
-    </div>
 
-    <div id="messages-container" class="messages-container"></div>
-  </div>
-  <button id="refresh-button" class="btn">Refresh feed</button>
-<script type="module" src="/src/main.ts"></script>
-</body>
+      <div id="messages-container" class="messages-container"></div>
+    </div>
+    <button id="refresh-button" class="btn">Refresh feed</button>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>

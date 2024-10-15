@@ -1,0 +1,27 @@
+.messages-title {
+  margin: 50px 0 20px;
+}
+
+.message {
+  border: 1px solid var(--dark-color);
+  padding: 10px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+
+  &-text {
+    line-height: 1.75;
+  }
+}
+
+.date {
+  color: var(--gray-color);
+  font-family: var(--secondary-font-family), sans-serif;
+  font-size: var(--size-s);
+}
+
+.no-messages {
+  border: 1px solid var(--dark-color);
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
