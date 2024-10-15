@@ -1,5 +1,6 @@
 import { getMessagesFromChannel } from '@api/telegramApi.ts'
 import { renderMessages } from '@components/messageRenderer.ts'
+import { getCurrentFilter } from '@ui/filterManager.ts'
 import { Toaster } from '@components/toaster.ts'
 import { Message } from '@app-types/index'
 
@@ -11,8 +12,7 @@ export async function updateMessages(filterImages: boolean | null) {
     const messages = await getMessagesFromChannel()
 
     const filteredMessages = messages.filter((message: Message) => {
-      const hasImage =
-        message.channel_post.caption && message.channel_post.photo
+      const hasImage = message.channel_post.photo?.length! > 0
       const hasText = message.channel_post.text
 
       if (filterImages === true) return hasImage
@@ -42,6 +42,7 @@ export async function updateMessages(filterImages: boolean | null) {
 export function startAutoRefresh() {
   setInterval(async () => {
     toaster.show('Checking for new messages...', 'info')
-    await updateMessages(null)
+    const currentFilter = getCurrentFilter()
+    await updateMessages(currentFilter)
   }, 15000)
 }
