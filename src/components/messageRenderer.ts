@@ -1,8 +1,9 @@
 import { getFileUrl } from '@utils/fileUtils'
 import { formatDate } from '@utils/dateFormatter'
+import { IMessage } from '@app-types/index'
 
 export function renderMessages(
-  messages: any[],
+  messages: IMessage[],
   filterImages: boolean | null = null,
 ) {
   const container = document.querySelector('#messages-container')
@@ -14,7 +15,7 @@ export function renderMessages(
 
   const posts = messages.filter((item) => {
     const hasText = item?.channel_post?.text || item?.channel_post?.caption
-    const hasImage = item?.channel_post?.photo?.length > 0
+    const hasImage = item?.channel_post?.photo?.length
 
     if (filterImages) {
       return hasText && hasImage
@@ -48,12 +49,13 @@ export function renderMessages(
 
     if (message.text || message.caption) {
       const messageText = document.createElement('p')
+
       messageText.classList.add('message-text')
-      messageText.textContent = message.text || message.caption
+      messageText.textContent = message.text ?? message.caption ?? null
       messageDiv.appendChild(messageText)
     }
 
-    if (message.photo?.length > 0) {
+    if (message.photo?.length) {
       const largestPic = message.photo[message.photo.length - 1]
 
       const imgElement = document.createElement('img')

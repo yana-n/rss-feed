@@ -2,7 +2,7 @@ import { getMessagesFromChannel } from '@api/telegramApi.ts'
 import { renderMessages } from '@components/messageRenderer.ts'
 import { getCurrentFilter } from '@ui/filterManager.ts'
 import { Toaster } from '@components/toaster.ts'
-import { Message } from '@app-types/index'
+import { IMessage, IUpdate } from '@app-types/index'
 
 const toaster = new Toaster()
 const msgContainer = document.querySelector('#messages-container')
@@ -11,17 +11,24 @@ export async function updateMessages(filterImages: boolean | null) {
   try {
     const messages = await getMessagesFromChannel()
 
-    const filteredMessages = messages.filter((message: Message) => {
-      const hasImage = message.channel_post.photo?.length! > 0
-      const hasText = message.channel_post.text
+    const filteredMessages: IMessage[] = messages
+      .filter((update: IUpdate) => update.channel_post)
+      .map((update: IUpdate) => ({ channel_post: update.channel_post! }))
 
-      if (filterImages === true) return hasImage
-      if (filterImages === false) return !hasImage && hasText
+    const finalFilteredMessages = filteredMessages.filter(
+      (message: IMessage) => {
+        const hasImage = message.channel_post.photo?.length
+        const hasText =
+          message.channel_post.text
 
-      return true
-    })
+        if (filterImages === true) return hasImage
+        if (filterImages === false) return !hasImage && hasText
 
-    if (filteredMessages.length === 0) {
+        return true
+      },
+    )
+
+    if (finalFilteredMessages.length === 0) {
       const declaimer = document.createElement('p')
       declaimer.textContent =
         "No message found for this filter. Let's try another one!"
@@ -31,7 +38,7 @@ export async function updateMessages(filterImages: boolean | null) {
       msgContainer!.appendChild(declaimer)
     } else {
       msgContainer!.innerHTML = ''
-      renderMessages(filteredMessages)
+      renderMessages(finalFilteredMessages)
     }
   } catch (error) {
     toaster.show('Error on updating messages', 'error')
@@ -39,10 +46,20 @@ export async function updateMessages(filterImages: boolean | null) {
   }
 }
 
-export function startAutoRefresh() {
-  setInterval(async () => {
-    toaster.show('Checking for new messages...', 'info')
-    const currentFilter = getCurrentFilter()
-    await updateMessages(currentFilter)
-  }, 15000)
+export async function startAutoRefresh() {
+  async function refreshMessages() {
+    try {
+      toaster.show('Checking for new messages...', 'info')
+      const currentFilter = getCurrentFilter()
+
+      await updateMessages(currentFilter)
+    } catch (error) {
+      toaster.show('Error while refreshing messages', 'error')
+      console.error('Error while refreshing messages:', error)
+    } finally {
+      setTimeout(refreshMessages, 15000)
+    }
+  }
+
+  await refreshMessages()
 }
